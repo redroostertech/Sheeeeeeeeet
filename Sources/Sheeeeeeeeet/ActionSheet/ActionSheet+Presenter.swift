@@ -15,7 +15,11 @@ public extension ActionSheet {
      specify a specific presenter when presenting the sheet.
      */
     static var defaultPresenter: ActionSheetPresenter {
-        let traits = UIApplication.shared.keyWindow?.traitCollection
+        let sharedSelector = NSSelectorFromString("sharedApplication")
+        guard UIApplication.responds(to: sharedSelector), let shared = UIApplication.perform(sharedSelector)?.takeUnretainedValue() as? UIApplication else {
+          fatalError("[Extensions cannot access Application]")
+        }
+        let traits = shared.keyWindow?.traitCollection
         return defaultPresenter(forTraits: traits)
     }
 }
